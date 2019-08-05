@@ -1,6 +1,7 @@
 import torch
 import utils
 import pandas as pd
+import numpy as np
 
 
 class Metric:
@@ -62,12 +63,12 @@ class Metric:
     def _calc_tp_fp_fn(self, binary_pred_sentences_scores, binary_targets):
         size = len(binary_pred_sentences_scores)
 
-        ner_tp_fp_fn = len(self.ner_to_idx_dict) * [[0, 0, 0]]
+        ner_tp_fp_fn = np.zeros((len(self.ner_to_idx_dict), 3))
 
         for i in range(0, size):
             for j in range(0, len(binary_pred_sentences_scores[i])):
-                true_ner_idx = binary_targets[i][j]
-                pred_ner_idx = binary_pred_sentences_scores[i][j]
+                true_ner_idx = binary_targets[i][j].item()
+                pred_ner_idx = binary_pred_sentences_scores[i][j].item()
                 if pred_ner_idx == true_ner_idx:
                     #add true positive
                     ner_tp_fp_fn[true_ner_idx][0] += 1
